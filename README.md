@@ -23,9 +23,13 @@
 
 ## 渲染可行性研究（①⑨）
 
-- 完整场景（含 Live2D 木偶）只能由专有渲染器完成：`壁纸引擎` App 的原生库 `libscenejni.so`（40MB，内嵌 Chromium + 专有 puppet 渲染）；开源方案 [we-layerd](https://github.com/Aromatic05/we-layerd)（⭐93，Rust）打包了官方渲染器，但需 Linux Wayland 桌面，Termux proot 环境跑不了
-- 浏览器端没有成熟的 WE 场景渲染器（[wallgl](https://github.com/lucaschnabel42/wallgl) 是雏形且不支持木偶；pixeltris/wallpaper-engine-web 已消失）
-- **可行路径**：外部渲染成视频（壁纸引擎 App 录屏 / 桌面 we-layerd）→ 插件新增**视频背景**（MP4/WebM 存 IndexedDB，`<video>` 循环播放）
+- 完整场景（含 Live2D 木偶）只能由专有渲染器完成：`壁纸引擎` App 的原生库 `libscenejni.so`（40MB，内嵌 Chromium + 专有 puppet 渲染）；开源方案 [we-layerd](https://github.com/Aromatic05/we-layerd)（Rust）打包了官方渲染器，但**仅限 Linux Wayland** 桌面（GNOME/niri/Hyprland/KDE Plasma），Windows 与 Termux proot 都跑不了
+- 浏览器端没有成熟的 WE 场景渲染器（[wallgl](https://github.com/lucaschnabel42/wallgl) 是雏形且不支持木偶；pixeltris/wallpaper-engine-web 已消失）——**与操作系统无关，任何浏览器都无法直接渲染 Live2D 场景**
+- **可行路径（跨平台通用）**：外部渲染成视频 → 插件**视频背景**（MP4/WebM 存 IndexedDB，`<video>` 循环播放）：
+  - **Windows**：Wallpaper Engine 官方版（Steam，Windows 原生渲染全部场景）或开源 [Lively Wallpaper](https://github.com/rocksdanister/lively)（支持视频/网页壁纸，不解析 WE 场景格式）→ 录屏导出 mp4
+  - **Linux 桌面**：we-layerd 渲染 → 录屏
+  - **移动端**：壁纸引擎 App 录屏
+- 插件在任意平台（Windows/Linux/macOS/移动端）的 dsh web 上功能一致：preview.gif / 内嵌视频纹理 / 多时段切换全部可用
 
 ## 官方文档（②）
 
