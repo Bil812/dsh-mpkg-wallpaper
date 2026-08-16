@@ -1,149 +1,166 @@
-# dsh-mpkg-wallpaper — Wallpaper Engine mpkg Background Plugin
+# dsh-mpkg-wallpaper — DSH 壁纸引擎 mpkg 背景插件
 
-[English](README.md) | [中文](README.zh-CN.md)
+[中文](README.md) | [English](README.en.md)
 
-A client-side plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web UI (dsh web) that loads **Wallpaper Engine `.mpkg` files directly in the browser** as the page background:
+给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web 界面（dsh web）添加背景壁纸的客户端插件，**支持直接在浏览器里解析 Wallpaper Engine 的 `.mpkg` 文件**：
 
-- Pick a `.mpkg` file → the container is parsed in-browser → the wallpaper's `preview.gif` (animated preview) becomes your **dynamic background** (rendered in an `<img>` element for reliable GIF looping); video wallpapers play their embedded mp4 automatically
-- **Time-of-day switching**: if the package contains multiple variants (`preview_night.gif` / `preview_day.gif` / …), the plugin picks the asset matching the current system clock
-- **Adjustable options (read-only)**: parses `project.json → general.properties` and shows the wallpaper's own parameters and current values for reference
-- **Frosted blur system**: wallpaper frosted-blur slider, unified full-screen blur (with independent switches for whether the chat area and the "New chat" button follow it), plus independent dialog / popover / mask blur controls
-- Sidebar/title-bar wallpaper visibility toggles, lens zoom (10–2000%), lens pan, panel opacity, light sharpen, Deep diving background box, and a clock overlay
-- **Conflict detection**: automatically disables itself when other wallpaper/theme plugins are detected (plugin-ID list + runtime detection of body background images / other full-screen background layers)
-- **Coexists with third-party UI plugins** (DSH-better-sidebar, dsh-chat-import, dsh-sidebar-qa, dsh-plugin-account-balance, …): this plugin's CSS only targets DSH's native area classes and never overrides injected content; third-party content injected into the sidebar automatically gets a 45% tint fallback so it stays readable over the wallpaper
-- Settings live at **Settings → Wallpaper Engine Background** (left-hand nav, neutral icon)
-- All settings persist in the browser (localStorage); large assets (images/GIFs/videos/embedded mp4) are stored in IndexedDB and survive refreshes
+- 选择 `.mpkg` 文件 → 浏览器内解析容器 → 自动提取 `preview.gif`（壁纸的动态预览）作为**动态背景**（用 `<img>` 元素承载，GIF 动画可靠循环播放）；视频类壁纸自动播放内嵌 mp4
+- 自动按**当前时间**选择素材（若壁纸包内含 `preview_night.gif` / `preview_day.gif` 等多时段素材）
+- **可调参数（只读展示）**：解析 `project.json → general.properties`，展示壁纸自带的参数与当前值，供对照壁纸引擎 App
+- **界面虚化（磨砂）**：磨砂模糊条（整张壁纸）、统一虚化（开关+整屏虚化条，聊天区/新会话按钮可独立选择是否跟随）、对话框/弹层/遮罩虚化三个独立开关+程度条
+- 侧边栏/标题栏透出壁纸开关、镜头缩放（10–2000%）、镜头平移、面板不透明度、轻度锐化、Deep diving 背景框开关
+- **冲突检测**：检测到其他壁纸/主题插件（插件 ID 名单 + 运行时检测 body 背景图/其他全屏背景层）自动关闭本功能
+- **第三方插件共存**：与侧边栏/设置页类插件（DSH-better-sidebar、dsh-chat-import、dsh-sidebar-qa、dsh-plugin-account-balance 等）共存无冲突——本插件 CSS 只命中 DSH 原生区域类名，不覆盖插件注入内容；注入侧边栏的第三方内容自动获得 45% 雾底保证在壁纸上可读
+- 设置页位于 **设置 → 壁纸引擎背景**（左侧导航，中性图标）
+- 所有设置持久化在浏览器 localStorage；大文件（图片/GIF/视频/内嵌 mp4）自动存入浏览器 IndexedDB，刷新不丢失
 
-## Feature Groups
+## 功能与设置分组
 
-- **Background source**: master toggle, .mpkg file, image URL, local image/GIF
-- **Appearance**: panel opacity, frosted blur, lens zoom, lens position
-- **UI blur**: unified blur amount, dialog/popover/mask blur toggles + amounts, Deep diving background box, title-bar frost/show
-- **Other**: sidebar shows wallpaper, light sharpen, restore defaults
+- **背景来源**：总开关、mpkg 文件、图片链接、本地图片/动图
+- **外观**：面板不透明度、磨砂模糊、镜头缩放、镜头位置
+- **界面虚化**：统一虚化程度、对话框/弹层/遮罩虚化开关 + 程度、Deep diving 背景框、标题栏磨砂/透出壁纸
+- **其他**：侧边栏透出壁纸、轻度锐化、恢复默认
 
-## Screenshots
+## 截图演示
 
-![Collapsed sidebar - new chat view](screenshots/dhsw1.jpg)
+![侧边栏收起 · 新会话界面](screenshots/dhsw1.jpg)
 
-*Dynamic wallpaper fills the whole UI. With the sidebar collapsed, the chat box sits centered with a frosted blur; the sidebar is fully transparent so the wallpaper shows through cleanly.*
+*动态壁纸铺满整个界面。此状态下侧边栏收起，聊天框位于屏幕中央并带有磨砂模糊效果；侧边栏呈全透明状态，壁纸完整透出，画面干净通透。*
 
-![Expanded sidebar](screenshots/dshw2.jpg)
+![侧边栏展开](screenshots/dshw2.jpg)
 
-*With the sidebar expanded, a light white filter sits over the UI (less see-through than above); the sidebar becomes ~50% translucent. Adjust the haze thickness with the **Panel opacity** and **Unified blur** sliders.*
+*侧边栏展开后，界面叠加了一层白色滤镜，通透度略低于上图；侧边栏呈半透明状态（约 50% 白雾）。这层白雾的厚薄可通过「面板不透明度」与「统一虚化」滑条随时调节。*
 
-![Settings page](screenshots/dshw3.jpg)
+![设置页](screenshots/dshw3.jpg)
 
-*The settings page. Beyond this screenshot, nearly every appearance aspect is adjustable: unified full-screen blur (chat area / New-chat button can follow independently), dialog / popover / mask blur, lens zoom & pan, sidebar / title-bar wallpaper visibility, title-bar frost amount, clock overlay, sharpen, and time-of-day switching for wallpapers that ship multiple time variants.*
+*壁纸引擎背景的设置界面。截图之外，外观几乎全部可调：统一虚化（聊天区/新会话按钮可独立选择是否跟随）、对话框/弹层/遮罩虚化、镜头缩放与平移、侧边栏/标题栏透出壁纸、标题栏磨砂程度、轻度锐化，以及部分壁纸的按时间自动切换。*
 
-## Scene Rendering Feasibility
+## 渲染可行性研究
 
-- Full scenes (Live2D puppets) can only be rendered by proprietary runtimes: the Wallpaper Engine app's native `libscenejni.so` (40 MB, embedded Chromium + proprietary puppet renderer). The open-source [we-layerd](https://github.com/Aromatic05/we-layerd) (Rust) bundles the official renderer but is **Linux Wayland only** (GNOME / niri / Hyprland / KDE Plasma) — it does not run on Windows or inside Termux proot.
-- There is no mature WE scene renderer for browsers ([wallgl](https://github.com/lucaschnabel42/wallgl) is a prototype without puppet support; pixeltris/wallpaper-engine-web is gone) — **regardless of OS, no browser can render Live2D scenes directly**.
-- **Cross-platform path**: render externally into a video, then use the plugin's **video background** (MP4/WebM stored in IndexedDB, played in a looping `<video>`):
-  - **Windows**: the official Wallpaper Engine (Steam, native full-scene rendering) or the open-source [Lively Wallpaper](https://github.com/rocksdanister/lively) (video/web/app wallpapers; does not parse WE scene format) → screen-record to mp4
-  - **Linux desktop**: render with we-layerd → screen-record
-  - **Mobile**: screen-record in the Wallpaper Engine app
-- The plugin behaves identically on every platform (Windows/Linux/macOS/mobile): preview.gif, embedded video textures and time-of-day switching all work.
+- 完整场景（含 Live2D 木偶）只能由专有渲染器完成：`壁纸引擎` App 的原生库 `libscenejni.so`（40MB，内嵌 Chromium + 专有 puppet 渲染）；开源方案 [we-layerd](https://github.com/Aromatic05/we-layerd)（Rust）打包了官方渲染器，但**仅限 Linux Wayland** 桌面（GNOME/niri/Hyprland/KDE Plasma），Windows 与 Termux proot 都跑不了
+- 浏览器端没有成熟的 WE 场景渲染器（[wallgl](https://github.com/lucaschnabel42/wallgl) 是雏形且不支持木偶；pixeltris/wallpaper-engine-web 已消失）——**与操作系统无关，任何浏览器都无法直接渲染 Live2D 场景**
+- **可行路径（跨平台通用）**：外部渲染成视频 → 插件**视频背景**（MP4/WebM 存 IndexedDB，`<video>` 循环播放）：
+  - **Windows**：Wallpaper Engine 官方版（Steam，Windows 原生渲染全部场景）或开源 [Lively Wallpaper](https://github.com/rocksdanister/lively)（支持视频/网页壁纸，不解析 WE 场景格式）→ 录屏导出 mp4
+  - **Linux 桌面**：we-layerd 渲染 → 录屏
+  - **移动端**：壁纸引擎 App 录屏
+- 插件在任意平台（Windows/Linux/macOS/移动端）的 dsh web 上功能一致：preview.gif / 内嵌视频纹理 / 多时段切换全部可用
 
-## Official Docs
+## 官方文档
 
-Wallpaper Engine's official help site ([help.wallpaperengine.io](https://help.wallpaperengine.io)) has a mobile section (pairing with Windows, etc.); the mpkg container format is proprietary and undocumented.
+Wallpaper Engine 官方帮助站 [help.wallpaperengine.io](https://help.wallpaperengine.io) 有移动端章节（与 Windows 配对等）；mpkg 容器格式为专有格式，官方未公开文档。
 
-## Install
+## 安装
+
+### 方式一：dsh plugin add（推荐）
 
 ```bash
 dsh plugin --profile web add dsh-mpkg-wallpaper
-# restart dsh web, then hard-refresh the browser (Ctrl+F5)
+# 重启 dsh web 后浏览器 Ctrl+F5 生效
 ```
 
-Manual install: drop the plugin into `$DSH_HOME/profiles/node_modules/` and register a `dsh-mpkg-wallpaper` line in the profile's `cordis.patch.yml`.
+### 方式二：手动复制
 
-Uninstall: `dsh plugin --profile web remove dsh-mpkg-wallpaper` (or remove the manual mount line + delete the plugin directory + restart).
+把插件目录（或 GitHub 下载的 zip 解压）放到 `$DSH_HOME/profiles/node_modules/dsh-mpkg-wallpaper/`，
+并在 profile 的 `cordis.patch.yml` 注册一行：
 
-## Usage
+```yaml
+- insert:
+    - id: dsh-mpkg-wallpaper
+      name: dsh-mpkg-wallpaper
+```
 
-Settings → **Wallpaper Engine Background**:
+### 方式三：GitHub 克隆
 
-| Control | Description |
+```bash
+git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/node_modules/dsh-mpkg-wallpaper
+```
+
+卸载：`dsh plugin --profile web remove dsh-mpkg-wallpaper`（或删除挂载行 + 插件目录 + 重启）。
+
+## 使用
+
+设置 → **壁纸引擎背景**：
+
+| 控件 | 说明 |
 |---|---|
-| Choose .mpkg | Uses preview.gif (or time-matched asset) as the dynamic background; you can also pick an mp4/webm file directly |
-| Adjustable options | The wallpaper's own parameters and current values (read-only, for reference in the Wallpaper Engine app) |
-| Image URL / local image | Plain images or GIFs |
-| Panel opacity | 50–100% |
-| Frosted blur | How blurred the wallpaper itself is, 0–40px (0 = sharp) |
-| Unified blur | One slider controls the whole screen's haze; the chat area / New-chat button can follow independently |
-| Dialog / popover / mask blur | Three independent toggles + amount sliders |
-| Lens zoom / position | Zoom (10–2000%) and pan the background; zoom out to see components at the picture edges |
-| Sidebar / title-bar wallpaper | Toggles; off = solid opaque color for that area |
-| Light sharpen | Improves low-res look; turn off if GIFs stutter |
+| 选择 .mpkg 文件 | 自动取 preview.gif（或按时间取素材）作动态背景；也可直接选 mp4/webm |
+| 可调参数 | 壁纸自带的参数与当前值（只读展示，供对照壁纸引擎 App） |
+| 图片链接 / 本地图片 | 普通图片或 GIF |
+| 面板不透明度 | 50–100% |
+| 磨砂模糊 | 整张壁纸的模糊程度 0–40px（0=清晰） |
+| 统一虚化 | 整屏朦胧感一个条控制；聊天区/新会话按钮可独立选择是否跟随 |
+| 对话框/弹层/遮罩虚化 | 三个独立开关+程度条 |
+| 镜头缩放/位置 | 背景画面放大（10–2000%）与平移；缩小可看到画面边缘的组件 |
+| 侧边栏/标题栏透出壁纸 | 开关；关闭后对应区域纯色不透明 |
+| 轻度锐化 | 提升低清观感；GIF 卡顿就关 |
 
-## Security
+## 安全说明
 
-- **No outbound requests**: the plugin never uses fetch/XHR/WebSocket; the only network behavior is the browser loading an image URL the user typed manually (same as the official example plugins)
-- **No sensitive content**: no paths, keys, tokens or personal info in the source
-- **No third-party closed source**: depends only on DSH's bundled react and the official slots/locale interfaces
-- Reference projects (all open source): [dsh-bg-image](https://github.com/lyh9712/dsh-bg-image) (MIT, template), [unmpkg](https://github.com/aqnya/unmpkg) (GPL-3.0, mpkg binary format only), [repkg](https://github.com/notscuffed/repkg) (GPL, .tex format research), [astc-encoder](https://github.com/ARM-software/astc-encoder) (Apache-2.0, local decode experiments)
-- Data boundary: all parsing happens locally in the browser; localStorage only stores background data URLs and option edits
+- **无主动网络请求**：插件不 fetch/XHR/WebSocket；唯一网络行为是用户手动输入的图片 URL 由浏览器加载（与官方示例插件相同）
+- **无敏感内容**：源码不含路径、密钥、令牌、个人信息
+- **无第三方闭源代码**：仅依赖 DSH 自带 react + 官方 slots/locale 接口
+- 参考项目（均开源）：[dsh-bg-image](https://github.com/lyh9712/dsh-bg-image)（MIT，模板）、[unmpkg](https://github.com/aqnya/unmpkg)（GPL-3.0，仅参考 mpkg 二进制格式）、[repkg](https://github.com/notscuffed/repkg)（GPL，仅研究 .tex 格式）、[astc-encoder](https://github.com/ARM-software/astc-encoder)（Apache-2.0，本地解码实验）
+- 数据边界：所有解析在浏览器本地完成；localStorage 只存背景图 data URL 与参数编辑
 
-## Limitations
+## 限制
 
-- **Scene-type wallpapers** (Live2D puppet + shader + particles): the full dynamic scene can only be rendered by the Wallpaper Engine app. The browser uses the author-generated `preview.gif`, which may look soft full-screen (zoom/sharpen helps).
-- **Options are read-only**: the browser shows pre-rendered assets, so editing options cannot change the picture; apply them in the Wallpaper Engine app instead.
-- **Very large assets**: standalone videos >600 MB, video textures >250 MB, images >200 MB cannot be handled by the browser (the plugin warns and falls back to the preview image when possible).
+- **场景类壁纸**（Live2D 木偶 + shader + 粒子）：完整动态场景只能在壁纸引擎 App 渲染，浏览器取用的 `preview.gif` 是作者生成的动画预览，全屏可能偏模糊（缩放/锐化可缓解）
+- **可调参数为只读展示**：浏览器显示的是预渲染素材，修改参数不会改变画面；如需生效请在壁纸引擎 App 中调整
+- **超大素材**：独立视频 >600MB、视频纹理 >250MB、图片 >200MB 时浏览器无法处理（会提示并尽量回退到预览图）
 
-## Supported Inputs
+## 支持的 mpkg 输入
 
-- **Wallpaper Engine .mpkg** (PKGM0014 video / PKGM0018 scene) — you can also pick an **mp4/webm** video file directly.
-- Size limits (mobile-browser friendly):
-  - Whole file **> 600 MB** is rejected.
-  - Standalone video **> 600 MB**, video texture **> 250 MB**, image/GIF **> 200 MB** cannot be processed — the plugin warns and falls back to the preview image when possible.
-  - Browser **storage quota** (IndexedDB) can also be a limit; the plugin reports "storage space insufficient" in that case.
-- What you get depends on the wallpaper's content:
-  - **Video wallpapers** (embedded mp4): the video plays as the background.
-  - **Scene wallpapers** (Live2D etc.): uses the author's `preview.gif` (browsers cannot render WE scenes).
-  - **Blue/green-screen layers**: falls back to the preview (the raw chroma-keyed footage would show blue/green).
+- **Wallpaper Engine .mpkg**（PKGM0014 视频类 / PKGM0018 场景类）——也可直接选择 **mp4/webm** 视频文件
+- 大小限制（移动端浏览器友好）：
+  - 整个文件 **> 600MB** 直接拒绝
+  - 独立视频 **> 600MB**、视频纹理 **> 250MB**、图片/GIF **> 200MB** 无法处理——插件会提示并尽量回退到预览图
+  - 浏览器**存储配额**（IndexedDB）也可能成为限制，此时提示"存储空间不足"
+- 导入后显示效果取决于壁纸内容：
+  - **视频类壁纸**（内嵌 mp4）：直接播放视频作为背景
+  - **场景类壁纸**（Live2D 等）：使用作者生成的 `preview.gif`（浏览器无法渲染 WE 场景）
+  - **蓝幕/绿幕抠像层**：回退使用预览图（直接播原片会显示蓝/绿背景）
 
-## Reporting Bugs
+## 反馈 Bug
 
-When reporting a bug, please attach:
-- The **original .mpkg source file** (required to reproduce the issue),
-- Browser console output (F12 → Console), if any,
-- Your DSH version and platform (Windows / Linux / mobile).
+反馈问题时请附带：
+- **原始 .mpkg 源文件**（复现问题所必需）
+- 浏览器控制台输出（F12 → Console），如有
+- 你的 DSH 版本与平台（Windows / Linux / 移动端）
 
-## File Layout
+## 文件结构
 
 ```
 dsh-mpkg-wallpaper/
-├── package.json      # dsh.bundle + dsh.client manifests
-├── cordis.patch.yml  # plugin install declaration (for dsh plugin add)
+├── package.json      # dsh.bundle + dsh.client 声明
+├── cordis.patch.yml  # 插件安装声明（dsh plugin add 使用）
 ├── lib/
-│   ├── index.js      # empty host-side entry (pure client plugin)
-│   └── client.js     # browser side: mpkg parser + settings page + background DOM + blur system
-├── tools/            # mpkg/tex/mdl reverse-engineering tools (for developers)
-├── README.md         # this file (English)
-└── README.zh-CN.md   # 中文说明
+│   ├── index.js      # 宿主端空实现（纯客户端插件）
+│   └── client.js     # 浏览器端：mpkg 解析 + 设置页 + 背景 DOM + 虚化体系
+├── tools/            # mpkg/tex/mdl 逆向解析工具（供开发者参考）
+├── README.md         # 英文说明
+└── README.zh-CN.md   # 本文件（中文）
 ```
 
-## Notes for Distribution
+## GitHub 发布说明
 
-### Portability
+### 可移植性（在他人的设备上也能用）
 
-- No absolute paths, no local ports, no environment-specific config; only DSH's bundled react and the official slots/locale interfaces
-- **Custom nav icon**: replace the `NAV_ICON` constant in `lib/client.js` (default: a hand-drawn "landscape" SVG, no trademark) with your own icon (20×20, SVG data URL or base64 PNG recommended)
-- The asset-library web page (`http://127.0.0.1:8090/素材库.html`) is a standalone tool, not shipped with the plugin
+- 无绝对路径、无本机端口、无环境专属配置；依赖仅 DSH 自带 react + 官方 slots/locale 接口
+- **自定义导航图标**：`lib/client.js` 里的 `NAV_ICON` 常量（默认是自绘的"风景画"SVG，无商标）可替换——改成你自己的图标即可（20×20，推荐 SVG data URL 或 base64 PNG）
+- 素材库网页（`http://127.0.0.1:8090/素材库.html`）是独立工具，不随插件发布；需要时自行用 `python3 -m http.server 8090 -d 素材目录` 启动
 
-### Reverse-Engineering Tools (tools/)
+### 包含的逆向工具（tools/）
 
-| Tool | Purpose |
+| 工具 | 用途 |
 |---|---|
-| `unmpkg.py` | mpkg container parser/extractor (PKGM0014/0018) |
-| `tex2png.py` | TEXV0005 texture decoder (DXT5/R8, etc.) |
-| `mdl_explorer.py` | .mdl structure explorer (block tags/meshes/float sections) |
-| `xref.py` | wallpaper64.exe string xref + disassembly (capstone) |
-| `MDL-格式分析笔记.md` | .mdl format reverse-engineering notes (container/mesh solved, skeleton = JSON, animation WIP) |
+| `unmpkg.py` | mpkg 容器解析/提取（PKGM0014/0018） |
+| `tex2png.py` | TEXV0005 纹理解码（DXT5/R8 等） |
+| `mdl_explorer.py` | .mdl 结构探索（块标签/网格/浮点区段） |
+| `xref.py` | wallpaper64.exe 字符串 xref + 反汇编（capstone） |
+| `MDL-格式分析笔记.md` | .mdl 格式逆向进展（容器/网格已破解，骨骼=JSON，动画待续） |
 
-### Wallpaper Format Research Summary (for other developers)
+### 壁纸格式研究摘要（供其他开发者）
 
-- **mpkg**: PKGM0014 (video type: mp4+gif+json) / PKGM0018 (scene type: scene.json+tex+mdl+shader)
-- **tex**: TEXV0005; format 5 = DXT family, format 34 = embedded MP4 video texture (the 4K animation of customize wallpapers lives right in there)
-- **mdl**: MDLV00xx block container; mesh = 8 floats/vertex; MDLS0003/0004 contain JSON skeleton poses; MDLA = animation
+- **mpkg**：PKGM0014（视频类：mp4+gif+json）/ PKGM0018（场景类：scene.json+tex+mdl+shader）
+- **tex**：TEXV0005，格式 5=DXT 家族，格式 34=内嵌 MP4 视频纹理（customize 壁纸的 4K 动画直接在里面）
+- **mdl**：MDLV00xx 块容器；网格=8 float/顶点；MDLS0003/0004 含 JSON 骨骼姿态；MDLA=动画
