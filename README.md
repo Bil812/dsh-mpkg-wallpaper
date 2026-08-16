@@ -1,6 +1,6 @@
 # dsh-mpkg-wallpaper — DSH 壁纸引擎 mpkg 背景插件 (v3)
 
-给 DeepSeek Harness Web 界面（dsh web）添加背景壁纸的客户端插件，**支持直接在浏览器里解析 Wallpaper Engine / 麻匪动态壁纸的 `.mpkg` 文件**：
+给 DeepSeek Harness Web 界面（dsh web）添加背景壁纸的客户端插件，**支持直接在浏览器里解析 Wallpaper Engine 的 `.mpkg` 文件**：
 
 - 选择 `.mpkg` 文件 → 浏览器内解析容器 → 自动提取 `preview.gif`（壁纸的动态预览）作为**动态背景**（用 `<img>` 元素承载，GIF 动画可靠循环播放）；视频类壁纸自动播放内嵌 mp4
 - 自动按**当前时间**选择素材（若壁纸包内含 `preview_night.gif` / `preview_day.gif` 等多时段素材）
