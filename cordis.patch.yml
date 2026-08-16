@@ -1,0 +1,12 @@
+# dsh-mpkg-wallpaper bundle patch
+#
+# 这是 `dsh.bundle.patch` 层：通过官方 CLI 安装时——
+#
+#   dsh plugin --profile <name> add dsh-mpkg-wallpaper
+#
+# ——CLI 会读取本声明把插件行追加到 bundle 栈，profile 启动时合并本 patch。
+# 若 profile 里还留着旧的手动挂载行（@local/dsh-mpkg-wallpaper），
+# 请先移除，避免双挂载。
+- insert:
+    - id: dsh-mpkg-wallpaper
+      name: 'dsh-mpkg-wallpaper'
