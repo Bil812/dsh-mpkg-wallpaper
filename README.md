@@ -21,6 +21,20 @@ A client-side plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/d
 - **UI blur**: unified blur amount, dialog/popover/mask blur toggles + amounts, Deep diving background box, title-bar frost/show
 - **Other**: sidebar shows wallpaper, light sharpen, restore defaults
 
+## Screenshots
+
+![Collapsed sidebar - new chat view](screenshots/dhsw1.jpg)
+
+*Dynamic wallpaper fills the whole UI. With the sidebar collapsed, the chat box sits centered with a frosted blur; the sidebar is fully transparent so the wallpaper shows through cleanly.*
+
+![Expanded sidebar](screenshots/dshw2.jpg)
+
+*With the sidebar expanded, a light white filter sits over the UI (less see-through than above); the sidebar becomes ~50% translucent. Adjust the haze thickness with the **Panel opacity** and **Unified blur** sliders.*
+
+![Settings page](screenshots/dshw3.jpg)
+
+*The settings page. Beyond this screenshot, nearly every appearance aspect is adjustable: unified full-screen blur (chat area / New-chat button can follow independently), dialog / popover / mask blur, lens zoom & pan, sidebar / title-bar wallpaper visibility, title-bar frost amount, clock overlay, sharpen, and time-of-day switching for wallpapers that ship multiple time variants.*
+
 ## Scene Rendering Feasibility
 
 - Full scenes (Live2D puppets) can only be rendered by proprietary runtimes: the Wallpaper Engine app's native `libscenejni.so` (40 MB, embedded Chromium + proprietary puppet renderer). The open-source [we-layerd](https://github.com/Aromatic05/we-layerd) (Rust) bundles the official renderer but is **Linux Wayland only** (GNOME / niri / Hyprland / KDE Plasma) — it does not run on Windows or inside Termux proot.
@@ -76,6 +90,25 @@ Settings → **Wallpaper Engine Background**:
 - **Scene-type wallpapers** (Live2D puppet + shader + particles): the full dynamic scene can only be rendered by the Wallpaper Engine app. The browser uses the author-generated `preview.gif`, which may look soft full-screen (zoom/sharpen helps).
 - **Options are read-only**: the browser shows pre-rendered assets, so editing options cannot change the picture; apply them in the Wallpaper Engine app instead.
 - **Very large assets**: standalone videos >600 MB, video textures >250 MB, images >200 MB cannot be handled by the browser (the plugin warns and falls back to the preview image when possible).
+
+## Supported Inputs
+
+- **Wallpaper Engine .mpkg** (PKGM0014 video / PKGM0018 scene) — you can also pick an **mp4/webm** video file directly.
+- Size limits (mobile-browser friendly):
+  - Whole file **> 600 MB** is rejected.
+  - Standalone video **> 600 MB**, video texture **> 250 MB**, image/GIF **> 200 MB** cannot be processed — the plugin warns and falls back to the preview image when possible.
+  - Browser **storage quota** (IndexedDB) can also be a limit; the plugin reports "storage space insufficient" in that case.
+- What you get depends on the wallpaper's content:
+  - **Video wallpapers** (embedded mp4): the video plays as the background.
+  - **Scene wallpapers** (Live2D etc.): uses the author's `preview.gif` (browsers cannot render WE scenes).
+  - **Blue/green-screen layers**: falls back to the preview (the raw chroma-keyed footage would show blue/green).
+
+## Reporting Bugs
+
+When reporting a bug, please attach:
+- The **original .mpkg source file** (required to reproduce the issue),
+- Browser console output (F12 → Console), if any,
+- Your DSH version and platform (Windows / Linux / mobile).
 
 ## File Layout
 
