@@ -14,12 +14,34 @@
 - 设置页位于 **设置 → 壁纸引擎背景**（左侧导航，中性图标）
 - 所有设置持久化在浏览器 localStorage；大文件（图片/GIF/视频/内嵌 mp4）自动存入浏览器 IndexedDB，刷新不丢失
 
+
 ## 功能与设置分组
 
 - **背景来源**：总开关、mpkg 文件、图片链接、本地图片/动图
 - **外观**：面板不透明度、磨砂模糊、镜头缩放、镜头位置
 - **界面虚化**：统一虚化程度、对话框/弹层/遮罩虚化开关 + 程度、Deep diving 背景框、标题栏磨砂/透出壁纸
 - **其他**：侧边栏透出壁纸、轻度锐化、恢复默认
+
+
+## 支持的 mpkg 输入
+
+- **Wallpaper Engine .mpkg**（PKGM0014 视频类 / PKGM0018 场景类）——也可直接选择 **mp4/webm** 视频文件
+- 大小限制（移动端浏览器友好）：
+  - 整个文件 **> 600MB** 直接拒绝
+  - 独立视频 **> 600MB**、视频纹理 **> 250MB**、图片/GIF **> 200MB** 无法处理——插件会提示并尽量回退到预览图
+  - 浏览器**存储配额**（IndexedDB）也可能成为限制，此时提示"存储空间不足"
+- 导入后显示效果取决于壁纸内容：
+  - **视频类壁纸**（内嵌 mp4）：直接播放视频作为背景
+  - **场景类壁纸**（Live2D 等）：使用作者生成的 `preview.gif`（浏览器无法渲染 WE 场景）
+  - **蓝幕/绿幕抠像层**：回退使用预览图（直接播原片会显示蓝/绿背景）
+
+
+## 限制
+
+- **场景类壁纸**（Live2D 木偶 + shader + 粒子）：完整动态场景只能在壁纸引擎 App 渲染，浏览器取用的 `preview.gif` 是作者生成的动画预览，全屏可能偏模糊（缩放/锐化可缓解）
+- **可调参数为只读展示**：浏览器显示的是预渲染素材，修改参数不会改变画面；如需生效请在壁纸引擎 App 中调整
+- **超大素材**：独立视频 >600MB、视频纹理 >250MB、图片 >200MB 时浏览器无法处理（会提示并尽量回退到预览图）
+
 
 ## 截图演示
 
@@ -29,25 +51,32 @@
 
 ![侧边栏展开](screenshots/dshw2.jpg)
 
-*侧边栏展开后，界面叠加了一层白色滤镜，通透度略低于上图；侧边栏呈半透明状态（约 50% 白雾）。这层白雾的厚薄可通过「面板不透明度」与「统一虚化」滑条随时调节。*
+*通过「面板不透明度」与「统一虚化」滑条调节后的效果（图为调节后）：大部分界面区域的不透明度均可调节，侧边栏半透明，壁纸在后方隐约透出。*
 
 ![设置页](screenshots/dshw3.jpg)
 
 *壁纸引擎背景的设置界面。截图之外，外观几乎全部可调：统一虚化（聊天区/新会话按钮可独立选择是否跟随）、对话框/弹层/遮罩虚化、镜头缩放与平移、侧边栏/标题栏透出壁纸、标题栏磨砂程度、轻度锐化，以及部分壁纸的按时间自动切换。*
 
-## 渲染可行性研究
+截图中的壁纸来自 B 站 UP 主【-夜莺Night】的壁纸作品：[作者主页](https://b23.tv/86CyaFw)
 
-- 完整场景（含 Live2D 木偶）只能由专有渲染器完成：`壁纸引擎` App 的原生库 `libscenejni.so`（40MB，内嵌 Chromium + 专有 puppet 渲染）；开源方案 [we-layerd](https://github.com/Aromatic05/we-layerd)（Rust）打包了官方渲染器，但**仅限 Linux Wayland** 桌面（GNOME/niri/Hyprland/KDE Plasma），Windows 与 Termux proot 都跑不了
-- 浏览器端没有成熟的 WE 场景渲染器（[wallgl](https://github.com/lucaschnabel42/wallgl) 是雏形且不支持木偶；pixeltris/wallpaper-engine-web 已消失）——**与操作系统无关，任何浏览器都无法直接渲染 Live2D 场景**
-- **可行路径（跨平台通用）**：外部渲染成视频 → 插件**视频背景**（MP4/WebM 存 IndexedDB，`<video>` 循环播放）：
-  - **Windows**：Wallpaper Engine 官方版（Steam，Windows 原生渲染全部场景）或开源 [Lively Wallpaper](https://github.com/rocksdanister/lively)（支持视频/网页壁纸，不解析 WE 场景格式）→ 录屏导出 mp4
-  - **Linux 桌面**：we-layerd 渲染 → 录屏
-  - **移动端**：壁纸引擎 App 录屏
-- 插件在任意平台（Windows/Linux/macOS/移动端）的 dsh web 上功能一致：preview.gif / 内嵌视频纹理 / 多时段切换全部可用
 
-## 官方文档
+## 使用
 
-Wallpaper Engine 官方帮助站 [help.wallpaperengine.io](https://help.wallpaperengine.io) 有移动端章节（与 Windows 配对等）；mpkg 容器格式为专有格式，官方未公开文档。
+设置 → **壁纸引擎背景**：
+
+| 控件 | 说明 |
+|---|---|
+| 选择 .mpkg 文件 | 自动取 preview.gif（或按时间取素材）作动态背景；也可直接选 mp4/webm |
+| 可调参数 | 壁纸自带的参数与当前值（只读展示，供对照壁纸引擎 App） |
+| 图片链接 / 本地图片 | 普通图片或 GIF |
+| 面板不透明度 | 50–100% |
+| 磨砂模糊 | 整张壁纸的模糊程度 0–40px（0=清晰） |
+| 统一虚化 | 整屏朦胧感一个条控制；聊天区/新会话按钮可独立选择是否跟随 |
+| 对话框/弹层/遮罩虚化 | 三个独立开关+程度条 |
+| 镜头缩放/位置 | 背景画面放大（10–2000%）与平移；缩小可看到画面边缘的组件 |
+| 侧边栏/标题栏透出壁纸 | 开关；关闭后对应区域纯色不透明 |
+| 轻度锐化 | 提升低清观感；GIF 卡顿就关 |
+
 
 ## 安装
 
@@ -77,22 +106,19 @@ git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/no
 
 卸载：`dsh plugin --profile web remove dsh-mpkg-wallpaper`（或删除挂载行 + 插件目录 + 重启）。
 
-## 使用
 
-设置 → **壁纸引擎背景**：
+## 官方文档
 
-| 控件 | 说明 |
-|---|---|
-| 选择 .mpkg 文件 | 自动取 preview.gif（或按时间取素材）作动态背景；也可直接选 mp4/webm |
-| 可调参数 | 壁纸自带的参数与当前值（只读展示，供对照壁纸引擎 App） |
-| 图片链接 / 本地图片 | 普通图片或 GIF |
-| 面板不透明度 | 50–100% |
-| 磨砂模糊 | 整张壁纸的模糊程度 0–40px（0=清晰） |
-| 统一虚化 | 整屏朦胧感一个条控制；聊天区/新会话按钮可独立选择是否跟随 |
-| 对话框/弹层/遮罩虚化 | 三个独立开关+程度条 |
-| 镜头缩放/位置 | 背景画面放大（10–2000%）与平移；缩小可看到画面边缘的组件 |
-| 侧边栏/标题栏透出壁纸 | 开关；关闭后对应区域纯色不透明 |
-| 轻度锐化 | 提升低清观感；GIF 卡顿就关 |
+Wallpaper Engine 官方帮助站 [help.wallpaperengine.io](https://help.wallpaperengine.io) 有移动端章节（与 Windows 配对等）；mpkg 容器格式为专有格式，官方未公开文档。
+
+
+## 反馈 Bug
+
+反馈问题时请附带：
+- **原始 .mpkg 源文件**（复现问题所必需）
+- 浏览器控制台输出（F12 → Console），如有
+- 你的 DSH 版本与平台（Windows / Linux / 移动端）
+
 
 ## 安全说明
 
@@ -102,30 +128,6 @@ git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/no
 - 参考项目（均开源）：[dsh-bg-image](https://github.com/lyh9712/dsh-bg-image)（MIT，模板）、[unmpkg](https://github.com/aqnya/unmpkg)（GPL-3.0，仅参考 mpkg 二进制格式）、[repkg](https://github.com/notscuffed/repkg)（GPL，仅研究 .tex 格式）、[astc-encoder](https://github.com/ARM-software/astc-encoder)（Apache-2.0，本地解码实验）
 - 数据边界：所有解析在浏览器本地完成；localStorage 只存背景图 data URL 与参数编辑
 
-## 限制
-
-- **场景类壁纸**（Live2D 木偶 + shader + 粒子）：完整动态场景只能在壁纸引擎 App 渲染，浏览器取用的 `preview.gif` 是作者生成的动画预览，全屏可能偏模糊（缩放/锐化可缓解）
-- **可调参数为只读展示**：浏览器显示的是预渲染素材，修改参数不会改变画面；如需生效请在壁纸引擎 App 中调整
-- **超大素材**：独立视频 >600MB、视频纹理 >250MB、图片 >200MB 时浏览器无法处理（会提示并尽量回退到预览图）
-
-## 支持的 mpkg 输入
-
-- **Wallpaper Engine .mpkg**（PKGM0014 视频类 / PKGM0018 场景类）——也可直接选择 **mp4/webm** 视频文件
-- 大小限制（移动端浏览器友好）：
-  - 整个文件 **> 600MB** 直接拒绝
-  - 独立视频 **> 600MB**、视频纹理 **> 250MB**、图片/GIF **> 200MB** 无法处理——插件会提示并尽量回退到预览图
-  - 浏览器**存储配额**（IndexedDB）也可能成为限制，此时提示"存储空间不足"
-- 导入后显示效果取决于壁纸内容：
-  - **视频类壁纸**（内嵌 mp4）：直接播放视频作为背景
-  - **场景类壁纸**（Live2D 等）：使用作者生成的 `preview.gif`（浏览器无法渲染 WE 场景）
-  - **蓝幕/绿幕抠像层**：回退使用预览图（直接播原片会显示蓝/绿背景）
-
-## 反馈 Bug
-
-反馈问题时请附带：
-- **原始 .mpkg 源文件**（复现问题所必需）
-- 浏览器控制台输出（F12 → Console），如有
-- 你的 DSH 版本与平台（Windows / Linux / 移动端）
 
 ## 文件结构
 
@@ -140,6 +142,7 @@ dsh-mpkg-wallpaper/
 ├── README.md         # 英文说明
 └── README.zh-CN.md   # 本文件（中文）
 ```
+
 
 ## GitHub 发布说明
 
@@ -164,3 +167,14 @@ dsh-mpkg-wallpaper/
 - **mpkg**：PKGM0014（视频类：mp4+gif+json）/ PKGM0018（场景类：scene.json+tex+mdl+shader）
 - **tex**：TEXV0005，格式 5=DXT 家族，格式 34=内嵌 MP4 视频纹理（customize 壁纸的 4K 动画直接在里面）
 - **mdl**：MDLV00xx 块容器；网格=8 float/顶点；MDLS0003/0004 含 JSON 骨骼姿态；MDLA=动画
+
+## 渲染可行性研究
+
+- 完整场景（含 Live2D 木偶）只能由专有渲染器完成：`壁纸引擎` App 的原生库 `libscenejni.so`（40MB，内嵌 Chromium + 专有 puppet 渲染）；开源方案 [we-layerd](https://github.com/Aromatic05/we-layerd)（Rust）打包了官方渲染器，但**仅限 Linux Wayland** 桌面（GNOME/niri/Hyprland/KDE Plasma），Windows 与 Termux proot 都跑不了
+- 浏览器端没有成熟的 WE 场景渲染器（[wallgl](https://github.com/lucaschnabel42/wallgl) 是雏形且不支持木偶；pixeltris/wallpaper-engine-web 已消失）——**与操作系统无关，任何浏览器都无法直接渲染 Live2D 场景**
+- **可行路径（跨平台通用）**：外部渲染成视频 → 插件**视频背景**（MP4/WebM 存 IndexedDB，`<video>` 循环播放）：
+  - **Windows**：Wallpaper Engine 官方版（Steam，Windows 原生渲染全部场景）或开源 [Lively Wallpaper](https://github.com/rocksdanister/lively)（支持视频/网页壁纸，不解析 WE 场景格式）→ 录屏导出 mp4
+  - **Linux 桌面**：we-layerd 渲染 → 录屏
+  - **移动端**：壁纸引擎 App 录屏
+- 插件在任意平台（Windows/Linux/macOS/移动端）的 dsh web 上功能一致：preview.gif / 内嵌视频纹理 / 多时段切换全部可用
+
