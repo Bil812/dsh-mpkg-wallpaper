@@ -14,7 +14,7 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 **🌊 Full-screen frosted blur suite**
 - **Unified blur**: one slider controls the wallpaper blur degree of the whole screen (0 = sharp wallpaper, higher = more blurred); surface white-fog thickness uniformly follows the Opacity slider
 - **Dialog / popover / mask blur**: three independent toggles + amount sliders (center-screen windows / popup menus / backdrop mask)
-- Wallpaper frosted-blur slider (available when unified blur is off), panel opacity, independent title-bar frost amount
+- Wallpaper frosted-blur slider (taken over & hinted when unified blur is on), panel opacity, independent title-bar frost amount
 
 **🎬 Lens & appearance**
 - Lens zoom (10–2000%) & pan, sidebar/title-bar wallpaper visibility toggles, light sharpen, Deep diving background box
