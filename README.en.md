@@ -6,11 +6,10 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 
 ## Core Features
 
-**📦 Wallpaper Engine `.mpkg` parsing (in the browser)**
-- Pick a `.mpkg` file → the container is parsed in-browser (pure client, nothing uploaded to third parties)
-- Video wallpapers play their embedded mp4 / video textures automatically; scene wallpapers use the author's `preview.gif` animated preview
-- **Time-of-day switching**: packages with multiple variants (`preview_night.gif` / `preview_day.gif` / …) pick the asset matching the current system time
-- **Adjustable options (read-only)**: parses `project.json → general.properties` and shows the wallpaper's parameters for reference in the Wallpaper Engine app
+**📦 Multi-source backgrounds (mpkg / video / image / URL)**
+- **Wallpaper Engine `.mpkg`**: parsed directly in the browser (pure client, nothing uploaded to third parties); video wallpapers play their embedded mp4 / video textures; scene wallpapers use the author's `preview.gif` animated preview; **time-of-day switching** picks the asset matching the current system time; **adjustable options (read-only)** for reference in the Wallpaper Engine app
+- **Direct image/GIF import**: local image files (png/jpg/webp/gif) or **image URLs** (including data:image) as backgrounds — large files auto-stored in browser storage, GIFs loop reliably
+- **Video files**: pick an mp4/webm file directly as a video background
 
 **🌊 Full-screen frosted blur suite**
 - **Unified blur**: one slider controls the whole screen's haze (0 = fully transparent showing the wallpaper); the chat area and "New chat" button can follow independently
@@ -46,7 +45,9 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 
 ## Supported Inputs
 
-- **Wallpaper Engine .mpkg** (PKGM0014 video / PKGM0018 scene) — you can also pick an **mp4/webm** video file directly.
+- **Wallpaper Engine .mpkg** (PKGM0014 video / PKGM0018 scene)
+- **mp4/webm video files** (picked directly)
+- **Image/GIF files** (png/jpg/webp/gif, local) and **image URLs** (including data:image)
 - Size limits depend on the **mode**:
   - **Hybrid mode (default on)**: mpkg is streamed to the DSH host → stored on disk → HTTP Range streaming playback. **Files >600MB are supported** (only disk space limits), with minimal memory use.
   - **Pure browser mode (hybrid off)**: whole file **>600MB** is rejected; standalone video **>600MB**, video texture **>250MB**, image/GIF **>200MB** cannot be processed (warns and falls back to the preview); IndexedDB storage quota can also be a limit.
