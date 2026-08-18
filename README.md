@@ -178,7 +178,6 @@ dsh-mpkg-wallpaper/
 
 - 无绝对路径、无本机端口、无环境专属配置；依赖仅 DSH 自带 react + 官方 slots/locale 接口
 - **自定义导航图标**：`lib/client.js` 里的 `NAV_ICON` 常量（默认是自绘的"风景画"SVG，无商标）可替换——改成你自己的图标即可（20×20，推荐 SVG data URL 或 base64 PNG）
-- 素材库网页（`http://127.0.0.1:8090/素材库.html`）是独立工具，不随插件发布；需要时自行用 `python3 -m http.server 8090 -d 素材目录` 启动
 
 ### 包含的逆向工具（tools/）
 

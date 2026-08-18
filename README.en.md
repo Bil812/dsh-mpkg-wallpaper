@@ -178,7 +178,6 @@ dsh-mpkg-wallpaper/
 
 - No absolute paths, no local ports, no environment-specific config; only DSH's bundled react and the official slots/locale interfaces
 - **Custom nav icon**: replace the `NAV_ICON` constant in `lib/client.js` (default: a hand-drawn "landscape" SVG, no trademark) with your own icon (20×20, SVG data URL or base64 PNG recommended)
-- The asset-library web page (`http://127.0.0.1:8090/素材库.html`) is a standalone tool, not shipped with the plugin
 
 ### Reverse-Engineering Tools (tools/)
 
