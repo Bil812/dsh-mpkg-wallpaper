@@ -1,5 +1,7 @@
 # dsh-mpkg-wallpaper — DSH 壁纸引擎 mpkg 背景插件
 
+[![Awesome DSH Plugin](https://awesome-dsh-plugin.com/badge.svg)](https://awesome-dsh-plugin.com)
+
 [中文](README.md) | [English](README.en.md)
 
 给 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web 界面（dsh web）添加背景壁纸的插件，**功能非常丰富**——从 Wallpaper Engine `.mpkg` 解析、多源壁纸、整屏虚化体系，到本地壁纸库与自动轮换，几乎每一个外观细节都可以调节。
