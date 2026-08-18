@@ -12,9 +12,9 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 - **Video files**: pick an mp4/webm file directly as a video background
 
 **🌊 Full-screen frosted blur suite**
-- **Unified blur**: one slider controls the whole screen's haze (0 = fully transparent showing the wallpaper); the chat area and "New chat" button can follow independently
+- **Unified blur**: one slider controls the wallpaper blur degree of the whole screen (0 = sharp wallpaper, higher = more blurred); surface white-fog thickness uniformly follows the Opacity slider
 - **Dialog / popover / mask blur**: three independent toggles + amount sliders (center-screen windows / popup menus / backdrop mask)
-- Wallpaper frosted-blur slider, panel opacity, independent title-bar frost amount
+- Wallpaper frosted-blur slider (available when unified blur is off), panel opacity, independent title-bar frost amount
 
 **🎬 Lens & appearance**
 - Lens zoom (10–2000%) & pan, sidebar/title-bar wallpaper visibility toggles, light sharpen, Deep diving background box
@@ -80,7 +80,7 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 
 ![Settings page](screenshots/dshw3.jpg)
 
-*The settings page. Beyond this screenshot, nearly every appearance aspect is adjustable: unified full-screen blur (chat area / New-chat button can follow independently), dialog / popover / mask blur, lens zoom & pan, sidebar / title-bar wallpaper visibility, title-bar frost amount, sharpen, and time-of-day switching for wallpapers that ship multiple time variants.*
+*The settings page. Beyond this screenshot, nearly every appearance aspect is adjustable: unified full-screen blur (one slider controls wallpaper blur degree), dialog / popover / mask blur, lens zoom & pan, sidebar / title-bar wallpaper visibility, title-bar frost amount, sharpen, and time-of-day switching for wallpapers that ship multiple time variants.*
 
 The wallpapers in the screenshots are works by Bilibili creator -夜莺Night: [author homepage](https://b23.tv/86CyaFw).
 
@@ -97,7 +97,7 @@ Settings → **Wallpaper Engine Background**:
 | Image URL / local image | Plain images or GIFs |
 | Panel opacity | 50–100% |
 | Frosted blur | How blurred the wallpaper itself is, 0–40px (0 = sharp) |
-| Unified blur | One slider controls the whole screen's haze; the chat area / New-chat button can follow independently |
+| Unified blur | One slider controls the whole screen's wallpaper blur degree (0=sharp, higher=more blurred); surface fog uniformly follows the Opacity slider |
 | Dialog / popover / mask blur | Three independent toggles + amount sliders |
 | Lens zoom / position | Zoom (10–2000%) and pan the background; zoom out to see components at the picture edges |
 | Sidebar / title-bar wallpaper | Toggles; off = solid opaque color for that area; title-bar frost amount adjustable independently |
