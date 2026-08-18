@@ -115,16 +115,25 @@ dsh plugin --profile web add dsh-mpkg-wallpaper
 # restart dsh web, then hard-refresh the browser (Ctrl+F5)
 ```
 
-### Option 2: Manual copy
+### Option 2: pnpm install (standard for the pnpm-workspace profile)
 
-Drop the plugin folder (or extract the GitHub zip) into `$DSH_HOME/profiles/node_modules/dsh-mpkg-wallpaper/`
-and register a line in the profile's `cordis.patch.yml`:
+```bash
+# 1. Put the plugin folder under the profile's node_modules (or extract the GitHub zip)
+git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/web/node_modules/dsh-mpkg-wallpaper
+#    (if your profile is not at ~/.dsh/profiles/web, use your profile directory)
 
-```yaml
-- insert:
-    - id: dsh-mpkg-wallpaper
-      name: dsh-mpkg-wallpaper
+# 2. Register a line in the profile's cordis.patch.yml:
+#    - insert:
+#        - id: dsh-mpkg-wallpaper
+#          name: dsh-mpkg-wallpaper
+
+# 3. Restart dsh web, then Ctrl+F5 in the browser
 ```
+
+> Note: the DSH profile is a pnpm workspace (`pnpm-workspace.yaml`, `nodeLinker: hoisted`),
+> so a plugin folder under the profile's `node_modules/` is picked up by pnpm's hoisted
+> linking automatically — no manual lockfile edits. Prefer Option 1 (`dsh plugin add`) if
+> you want a registry install.
 
 ### Option 3: Git clone
 

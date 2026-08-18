@@ -115,16 +115,25 @@ dsh plugin --profile web add dsh-mpkg-wallpaper
 # 重启 dsh web 后浏览器 Ctrl+F5 生效
 ```
 
-### 方式二：手动复制
+### 方式二：pnpm 安装（profile 是 pnpm workspace 时的标准做法）
 
-把插件目录（或 GitHub 下载的 zip 解压）放到 `$DSH_HOME/profiles/node_modules/dsh-mpkg-wallpaper/`，
-并在 profile 的 `cordis.patch.yml` 注册一行：
+```bash
+# 1. 把插件目录放到 profile 的 node_modules 下
+#    （或用 GitHub 下载的 zip 解压）
+git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/web/node_modules/dsh-mpkg-wallpaper
+#    （若 profile 不在 ~/.dsh/profiles/web，把路径换成你的 profile 目录）
 
-```yaml
-- insert:
-    - id: dsh-mpkg-wallpaper
-      name: dsh-mpkg-wallpaper
+# 2. 在 profile 的 cordis.patch.yml 注册一行：
+#    - insert:
+#        - id: dsh-mpkg-wallpaper
+#          name: dsh-mpkg-wallpaper
+
+# 3. 重启 dsh web，浏览器 Ctrl+F5 生效
 ```
+
+> 注：DSH profile 使用 pnpm workspace（`pnpm-workspace.yaml`，`nodeLinker: hoisted`），
+> 插件目录放在 profile 的 `node_modules/` 下即可被 pnpm 的 hoisted 链接识别，
+> 无需手动改 lockfile；若你更习惯 registry 安装，用方式一 `dsh plugin add`。
 
 ### 方式三：GitHub 克隆
 
