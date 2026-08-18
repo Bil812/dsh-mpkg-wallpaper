@@ -143,6 +143,14 @@ git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/no
 
 Uninstall: `dsh plugin --profile web remove dsh-mpkg-wallpaper` (or remove the mount line + delete the plugin directory + restart).
 
+> **Why does the plugin market show this plugin but not in the "installed plugins" list?**
+> The market's installed detection reads only the profile's `package.json` dependencies.
+> Manual installs (Option 2/3: clone into `node_modules` + `cordis.patch.yml` insert) are
+> not recorded there, so the market reports "not installed" — this only affects the market
+> display, not the wallpaper feature. To be recognized as installed (and market-managed for
+> updates), install via **Option 1** `dsh plugin add` and remove the old manual copy (the
+> `cordis.patch.yml` insert line + plugin directory) to avoid double-loading the plugin.
+
 
 ## Official Docs
 

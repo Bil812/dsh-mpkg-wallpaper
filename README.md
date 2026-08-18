@@ -143,6 +143,13 @@ git clone https://github.com/XHR666/dsh-mpkg-wallpaper.git $DSH_HOME/profiles/no
 
 卸载：`dsh plugin --profile web remove dsh-mpkg-wallpaper`（或删除挂载行 + 插件目录 + 重启）。
 
+> **为什么插件市场里显示了本插件、但「已安装插件」列表里没有？**
+> 插件市场的已安装检测只读 profile 的 `package.json` 依赖表。方式二/方式三（手动 clone
+> 到 `node_modules` + `cordis.patch.yml` insert）不会被依赖表记录，所以市场判为「未安装」
+> ——不影响壁纸功能，只是市场显示如此。想被市场识别为已安装（并可用市场管理更新），
+> 请用**方式一** `dsh plugin add` 安装，并把旧的手动副本（`cordis.patch.yml` 的 insert 行 +
+> 插件目录）移除，避免同一插件被加载两次。
+
 
 ## 官方文档
 
