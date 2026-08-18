@@ -12,9 +12,13 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 - **Video files**: pick an mp4/webm file directly as a video background
 
 **🌊 Full-screen frosted blur suite**
-- **Unified blur**: one slider controls the wallpaper blur degree of the whole screen (0 = sharp wallpaper, higher = more blurred); surface white-fog thickness uniformly follows the Opacity slider
-- **Dialog / popover / mask blur**: three independent toggles + amount sliders (center-screen windows / popup menus / backdrop mask)
-- Wallpaper frosted-blur slider (taken over & hinted when unified blur is on), panel opacity, independent title-bar frost amount
+- **Unified blur (own section)**: one slider controls the wallpaper blur degree of the whole screen (0 = sharp, higher = more blurred); sidebar/title-bar fog thickness, chat-area follow and new-chat button follow are adjustable independently; when on it takes over the items below (sidebar frost, title-bar frost and the frosted-blur slider are disabled with a hint)
+- **UI blur (own section)**:
+  - **Blur dialogs**: generic center-screen windows + the chat input box (frosted backdrop; text scrolling under the input box turns hazy)
+  - **Blur settings panel**: the DSH settings panel with its own toggle + amount
+  - **Blur download/confirm popups**: this plugin's download-confirm, conflict-detection and error popups with their own toggle + amount
+  - **Blur popovers / blur mask**: menus/dropdowns/tooltips and the full-screen dim each managed separately
+  - **Sidebar frost (Aqua scheme)**: the sidebar itself becomes glass (backdrop-filter blurs the wallpaper behind it); automatically lifted while a dialog is open so the blur layer cannot trap fixed popups
 
 **🎬 Lens & appearance**
 - Lens zoom (10–2000%) & pan, sidebar/title-bar wallpaper visibility toggles, light sharpen, Deep diving background box
@@ -43,7 +47,8 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 
 - **Background source**: master toggle, hybrid large-file mode, .mpkg file, image URL, local image/GIF, local wallpaper library (Steam discovery + custom folder + folder picker), wallpaper switching & rotation
 - **Appearance**: panel opacity, frosted blur, lens zoom, lens position
-- **UI blur**: unified blur amount, dialog/popover/mask blur toggles + amounts, Deep diving background box, title-bar frost/show (independent frost amount)
+- **Unified blur**: full-screen blur toggle + amount, sidebar/title-bar fog thickness, chat-area follow, new-chat button follow
+- **UI blur**: dialog / settings panel / download-confirm popup blur (each with its own toggle + amount), popover blur, mask blur, sidebar frost (Aqua scheme), Deep diving background box, title-bar frost/show (independent frost amount)
 - **Other**: sidebar shows wallpaper, light sharpen, third-party UI radius compat (off by default), update check / one-click hot update, restore defaults
 
 
@@ -97,8 +102,8 @@ Settings → **Wallpaper Engine Background**:
 | Image URL / local image | Plain images or GIFs |
 | Panel opacity | 50–100% |
 | Frosted blur | How blurred the wallpaper itself is, 0–40px (0 = sharp) |
-| Unified blur | One slider controls the whole screen's wallpaper blur degree (0=sharp, higher=more blurred); surface fog uniformly follows the Opacity slider |
-| Dialog / popover / mask blur | Three independent toggles + amount sliders |
+| Unified blur (own section) | One slider controls the whole screen's wallpaper blur degree (0=sharp, higher=more blurred); sidebar/title-bar fog thickness, chat-area follow and new-chat follow adjustable; takes over the items below when on |
+| Dialog / settings panel / confirm popup / popover / mask blur | Each with its own toggle + amount slider; sidebar frost (Aqua scheme, auto-lifted while a dialog is open) |
 | Lens zoom / position | Zoom (10–2000%) and pan the background; zoom out to see components at the picture edges |
 | Sidebar / title-bar wallpaper | Toggles; off = solid opaque color for that area; title-bar frost amount adjustable independently |
 | Local wallpaper library | Steam discovery (Windows) + custom folder (any folder + folder picker) |
