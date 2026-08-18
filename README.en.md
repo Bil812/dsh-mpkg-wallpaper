@@ -34,13 +34,17 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 - **Security boundary**: .exe/application wallpapers fully excluded (anti-malware), custom folders read images/videos only, host routes have path-traversal guards
 - Pure-client parsing stays inside the browser sandbox — malicious mpkg cannot reach the host file system
 
+**🔄 Update check & one-click hot update**
+- "Check updates" compares **actual code content hashes** (README changes do not trigger) — only real functional changes count
+- New version found → "Update now": auto-downloads the latest code + version from GitHub, writes it back locally → restart dsh web to take effect
+
 
 ## Feature Groups
 
 - **Background source**: master toggle, hybrid large-file mode, .mpkg file, image URL, local image/GIF, local wallpaper library (Steam discovery + custom folder + folder picker), wallpaper switching & rotation
 - **Appearance**: panel opacity, frosted blur, lens zoom, lens position
 - **UI blur**: unified blur amount, dialog/popover/mask blur toggles + amounts, Deep diving background box, title-bar frost/show (independent frost amount)
-- **Other**: sidebar shows wallpaper, light sharpen, third-party UI radius compat (off by default), restore defaults
+- **Other**: sidebar shows wallpaper, light sharpen, third-party UI radius compat (off by default), update check / one-click hot update, restore defaults
 
 
 ## Supported Inputs
