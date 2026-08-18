@@ -2,17 +2,38 @@
 
 [中文](README.md) | [English](README.en.md)
 
-A client-side plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web UI (dsh web) that loads **Wallpaper Engine `.mpkg` files directly in the browser** as the page background:
+A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web UI (dsh web) that turns your background into a **feature-rich wallpaper system** — from parsing Wallpaper Engine `.mpkg` files, to a full-screen frosted blur suite, to a local wallpaper library with automatic rotation. Nearly every visual detail is adjustable.
 
-- Pick a `.mpkg` file → the container is parsed in-browser → the wallpaper's `preview.gif` (animated preview) becomes your **dynamic background** (rendered in an `<img>` element for reliable GIF looping); video wallpapers play their embedded mp4 automatically
-- **Time-of-day switching**: if the package contains multiple variants (`preview_night.gif` / `preview_day.gif` / …), the plugin picks the asset matching the current system time
-- **Adjustable options (read-only)**: parses `project.json → general.properties` and shows the wallpaper's own parameters and current values for reference
-- **Frosted blur system**: wallpaper frosted-blur slider, unified full-screen blur (with independent switches for whether the chat area and the "New chat" button follow it), plus independent dialog / popover / mask blur controls
-- Sidebar/title-bar wallpaper visibility toggles, lens zoom (10–2000%), lens pan, panel opacity, light sharpen, Deep diving background box
-- **Conflict detection**: automatically disables itself when other wallpaper/theme plugins are detected (plugin-ID list + runtime detection of body background images / other full-screen background layers)
-- **Coexists with third-party UI plugins** (DSH-better-sidebar, dsh-chat-import, dsh-sidebar-qa, dsh-plugin-account-balance, …): this plugin's CSS only targets DSH's native area classes and never overrides injected content; third-party content injected into the sidebar automatically gets a 45% tint fallback so it stays readable over the wallpaper
-- Settings live at **Settings → Wallpaper Engine Background** (left-hand nav, neutral icon)
-- All settings persist in the browser (localStorage); large assets (images/GIFs/videos/embedded mp4) are stored in IndexedDB and survive refreshes
+## Core Features
+
+**📦 Wallpaper Engine `.mpkg` parsing (in the browser)**
+- Pick a `.mpkg` file → the container is parsed in-browser (pure client, nothing uploaded to third parties)
+- Video wallpapers play their embedded mp4 / video textures automatically; scene wallpapers use the author's `preview.gif` animated preview
+- **Time-of-day switching**: packages with multiple variants (`preview_night.gif` / `preview_day.gif` / …) pick the asset matching the current system time
+- **Adjustable options (read-only)**: parses `project.json → general.properties` and shows the wallpaper's parameters for reference in the Wallpaper Engine app
+
+**🌊 Full-screen frosted blur suite**
+- **Unified blur**: one slider controls the whole screen's haze (0 = fully transparent showing the wallpaper); the chat area and "New chat" button can follow independently
+- **Dialog / popover / mask blur**: three independent toggles + amount sliders (center-screen windows / popup menus / backdrop mask)
+- Wallpaper frosted-blur slider, panel opacity, independent title-bar frost amount
+
+**🎬 Lens & appearance**
+- Lens zoom (10–2000%) & pan, sidebar/title-bar wallpaper visibility toggles, light sharpen, Deep diving background box
+
+**🚀 Hybrid large-file mode**
+- On: mpkg is **streamed to the DSH host** → stored on disk → HTTP Range streaming playback, **supports files >600MB** with minimal memory
+- Off: pure browser mode (600MB cap)
+
+**🖼️ Local wallpaper library (Windows + cross-platform)**
+- **Steam discovery**: auto-locates the Wallpaper Engine install (including non-default drives via registry + libraryfolders.vdf) and lists video/web wallpapers
+- **Custom local wallpaper folder**: any folder can become a wallpaper library, with a built-in **cross-platform folder picker** (browse directories step by step)
+- **Wallpaper switching & rotation**: one-click "Next wallpaper", or timed auto-rotation (adjustable interval)
+
+**🛡️ Security & coexistence**
+- **Conflict detection**: auto-disables itself when other wallpaper/theme plugins are detected
+- **Coexists with third-party UI plugins** (DSH-better-sidebar, dsh-chat-import, dsh-sidebar-qa, …): CSS only targets DSH's native area classes, never overriding injected content
+- **Security boundary**: .exe/application wallpapers fully excluded (anti-malware), custom folders read images/videos only, host routes have path-traversal guards
+- Pure-client parsing stays inside the browser sandbox — malicious mpkg cannot reach the host file system
 
 
 ## Feature Groups
