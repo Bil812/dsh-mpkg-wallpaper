@@ -38,21 +38,20 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 
 ## Feature Groups
 
-- **Background source**: master toggle, .mpkg file, image URL, local image/GIF
+- **Background source**: master toggle, hybrid large-file mode, .mpkg file, image URL, local image/GIF, local wallpaper library (Steam discovery + custom folder + folder picker), wallpaper switching & rotation
 - **Appearance**: panel opacity, frosted blur, lens zoom, lens position
-- **UI blur**: unified blur amount, dialog/popover/mask blur toggles + amounts, Deep diving background box, title-bar frost/show
-- **Other**: sidebar shows wallpaper, light sharpen, restore defaults
+- **UI blur**: unified blur amount, dialog/popover/mask blur toggles + amounts, Deep diving background box, title-bar frost/show (independent frost amount)
+- **Other**: sidebar shows wallpaper, light sharpen, third-party UI radius compat (off by default), restore defaults
 
 
 ## Supported Inputs
 
 - **Wallpaper Engine .mpkg** (PKGM0014 video / PKGM0018 scene) — you can also pick an **mp4/webm** video file directly.
-- Size limits (mobile-browser friendly):
-  - Whole file **> 600 MB** is rejected.
-  - Standalone video **> 600 MB**, video texture **> 250 MB**, image/GIF **> 200 MB** cannot be processed — the plugin warns and falls back to the preview image when possible.
-  - Browser **storage quota** (IndexedDB) can also be a limit; the plugin reports "storage space insufficient" in that case.
+- Size limits depend on the **mode**:
+  - **Hybrid mode (default on)**: mpkg is streamed to the DSH host → stored on disk → HTTP Range streaming playback. **Files >600MB are supported** (only disk space limits), with minimal memory use.
+  - **Pure browser mode (hybrid off)**: whole file **>600MB** is rejected; standalone video **>600MB**, video texture **>250MB**, image/GIF **>200MB** cannot be processed (warns and falls back to the preview); IndexedDB storage quota can also be a limit.
 - What you get depends on the wallpaper's content:
-  - **Video wallpapers** (embedded mp4): the video plays as the background.
+  - **Video wallpapers** (embedded mp4 / standalone mp4): the video plays as the background.
   - **Scene wallpapers** (Live2D etc.): uses the author's `preview.gif` (browsers cannot render WE scenes).
   - **Blue/green-screen layers**: falls back to the preview (the raw chroma-keyed footage would show blue/green).
 
@@ -61,7 +60,7 @@ A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harn
 
 - **Scene-type wallpapers** (Live2D puppet + shader + particles): the full dynamic scene can only be rendered by the Wallpaper Engine app. The browser uses the author-generated `preview.gif`, which may look soft full-screen (zoom/sharpen helps).
 - **Options are read-only**: the browser shows pre-rendered assets, so editing options cannot change the picture; apply them in the Wallpaper Engine app instead.
-- **Very large assets**: standalone videos >600 MB, video textures >250 MB, images >200 MB cannot be handled by the browser (the plugin warns and falls back to the preview image when possible).
+- **Very large assets** (pure browser mode): standalone videos >600MB, video textures >250MB, images >200MB cannot be handled (warns and falls back to the preview). In **hybrid mode** large files stream through the host — no such limit.
 
 
 ## Screenshots
@@ -88,6 +87,7 @@ Settings → **Wallpaper Engine Background**:
 | Control | Description |
 |---|---|
 | Choose .mpkg | Uses preview.gif (or time-matched asset) as the dynamic background; you can also pick an mp4/webm file directly |
+| Hybrid large-file mode | On: supports >600MB (streamed to host); Off: pure browser mode (600MB cap) |
 | Adjustable options | The wallpaper's own parameters and current values (read-only, for reference in the Wallpaper Engine app) |
 | Image URL / local image | Plain images or GIFs |
 | Panel opacity | 50–100% |
@@ -95,7 +95,9 @@ Settings → **Wallpaper Engine Background**:
 | Unified blur | One slider controls the whole screen's haze; the chat area / New-chat button can follow independently |
 | Dialog / popover / mask blur | Three independent toggles + amount sliders |
 | Lens zoom / position | Zoom (10–2000%) and pan the background; zoom out to see components at the picture edges |
-| Sidebar / title-bar wallpaper | Toggles; off = solid opaque color for that area |
+| Sidebar / title-bar wallpaper | Toggles; off = solid opaque color for that area; title-bar frost amount adjustable independently |
+| Local wallpaper library | Steam discovery (Windows) + custom folder (any folder + folder picker) |
+| Wallpaper switching & rotation | "Next wallpaper" one-click switch; timed auto-rotation (adjustable interval) |
 | Light sharpen | Improves low-res look; turn off if GIFs stutter |
 
 
@@ -143,7 +145,7 @@ When reporting a bug, please attach:
 
 ## Security
 
-- **No outbound requests**: the plugin never uses fetch/XHR/WebSocket; the only network behavior is the browser loading an image URL the user typed manually (same as the official example plugins)
+- **No external network requests**: the plugin never contacts external networks; the only network behavior is: ① the browser loading an image URL the user typed manually; ② in hybrid mode, HTTP communication with the **local DSH host** (127.0.0.1) for uploading mpkg / streaming wallpapers — never through any third party
 - **No sensitive content**: no paths, keys, tokens or personal info in the source
 - **No third-party closed source**: depends only on DSH's bundled react and the official slots/locale interfaces
 - Reference projects (all open source): [dsh-bg-image](https://github.com/lyh9712/dsh-bg-image) (MIT, template), [unmpkg](https://github.com/aqnya/unmpkg) (GPL-3.0, mpkg binary format only), [repkg](https://github.com/notscuffed/repkg) (GPL, .tex format research), [astc-encoder](https://github.com/ARM-software/astc-encoder) (Apache-2.0, local decode experiments)
@@ -157,11 +159,11 @@ dsh-mpkg-wallpaper/
 ├── package.json      # dsh.bundle + dsh.client manifests
 ├── cordis.patch.yml  # plugin install declaration (for dsh plugin add)
 ├── lib/
-│   ├── index.js      # empty host-side entry (pure client plugin)
-│   └── client.js     # browser side: mpkg parser + settings page + background DOM + blur system
+│   ├── index.js      # host side: large-file upload/streaming + Steam discovery + custom folders
+│   └── client.js     # browser side: mpkg parser + settings page + background DOM + blur system + wallpaper library
 ├── tools/            # mpkg/tex/mdl reverse-engineering tools (for developers)
-├── README.md         # this file (English)
-└── README.zh-CN.md   # 中文说明
+├── README.md         # 中文说明
+└── README.en.md      # this file (English)
 ```
 
 
