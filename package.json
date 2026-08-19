@@ -4,6 +4,13 @@
   "description": "DSH Web 壁纸引擎 Wallpaper Engine mpkg 背景插件：浏览器内直接解析 .mpkg（preview.gif 动态背景/内嵌 mp4 视频/多时段切换），整屏统一虚化/对话框/弹层/遮罩独立虚化、镜头缩放平移、时钟、冲突检测。",
   "private": false,
   "type": "module",
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "README.md",
+    "README.en.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": "./lib/index.js",
     "./client": "./lib/client.js",
@@ -43,5 +50,9 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/XHR666/dsh-mpkg-wallpaper.git"
+  },
+  "homepage": "https://github.com/XHR666/dsh-mpkg-wallpaper",
+  "bugs": {
+    "url": "https://github.com/XHR666/dsh-mpkg-wallpaper/issues"
   }
 }
