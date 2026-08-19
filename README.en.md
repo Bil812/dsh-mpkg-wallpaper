@@ -6,7 +6,32 @@
 
 A plugin for the [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web UI (dsh web) that turns your background into a **feature-rich wallpaper system** — from parsing Wallpaper Engine `.mpkg` files, to a full-screen frosted blur suite, to a local wallpaper library with automatic rotation. Nearly every visual detail is adjustable.
 
-One plugin covers the whole wallpaper chain — import, parsing, playback, rotation, appearance tuning, local management and updates: animated images, videos and time-of-day variants all play; blur/frost/float/lens/brightness are each independently adjustable; it can scan local wallpaper libraries, rotate on a timer and check for updates with one click. Install it and most interface-appearance needs are covered.
+## 🍴 What this fork changes (Bil812 · based on upstream v3.0.0)
+
+> This fork reworks the whole "appearance/theme" layer on top of the original plugin so the DSH UI blends with your wallpaper.
+> **Key changes: unified full-screen mask · fixed opacity slider · panel colors auto-match the wallpaper / custom theme color · adaptive font colors · blue-accent cleanup · collapsible settings.**
+
+### 1. Unified full-screen mask (new architecture)
+- A single translucent **`#mpw-mask` overlay covers the whole UI** (bottom of the layer stack, under every other popup): sidebar, title bar, chat, composer, bubbles, menus and buttons all share the same fog — no more patchy surfaces.
+- **Panel opacity slider rebuilt: 0–100%, live and continuous** (0 = wallpaper fully visible, 100 = solid mask color). Upstream's slider was hijacked when unifyTint was on and only had 0/100 visual states — fixed.
+
+### 2. Panel colors auto-match the wallpaper / custom theme color
+- Auto color extraction from the wallpaper (48×48 canvas average, refreshed every 2s for video/GIF; falls back to theme neutrals for cross-origin images).
+- New **Office-style derived-shade palette**: "Custom theme (mask) color" = 4 lighter steps + base + 4 darker steps (9 same-hue swatches) plus a native color picker and "Auto" reset.
+- "Panel emphasis" slider: an extra mask layer on top of the global one so sidebar/title bar stand out.
+
+### 3. Adaptive font colors + custom font color
+- High-contrast text derived from mask lightness (dark on light / light on dark; secondary/tertiary are readable same-family grays) — no more low-contrast grays.
+- "Custom font color" picker + derived-shade panel.
+- **Caret / selection / focus-outline** colors now follow the text color (brand blue removed); inline `<code>`, code blocks, bubbles, buttons, menus and the settings panel all share the same token overrides.
+
+### 4. Blue-accent & hard-coded color cleanup
+- The `--dsw-alias-brand-primary` family is overridden with ink-derived colors → workspace icons, session submit button and plugin texts are no longer "the same blue".
+- Hard-coded dark surfaces like the copy hovercard (`#2C2C2E`) are re-tinted to the theme color.
+
+### 5. Organized settings
+- Collapsible groups (Source / Appearance / UI blur / Show wallpaper / Other), only the first two expanded by default.
+
 
 ## Core Features
 
@@ -231,3 +256,12 @@ dsh-mpkg-wallpaper/
   - **Mobile**: screen-record in the Wallpaper Engine app
 - The plugin behaves identically on every platform (Windows/Linux/macOS/mobile): preview.gif, embedded video textures and time-of-day switching all work.
 
+
+
+## 🍴 New in this fork (based on v3.0.0)
+
+- **Unified full-screen mask**: one translucent overlay at the bottom of the layer stack covers the whole UI, so every panel shares the same fog. Panel opacity 0–100% applies live (0 = wallpaper fully visible, 100 = solid mask color).
+- **Panel colors follow the wallpaper / custom theme color**: sidebar, title bar, chat, composer, bubbles, code, menus and buttons all use the same mask color (auto-picked from the wallpaper, or a custom Office-style derived-shade palette).
+- **Adaptive font colors**: high-contrast text derived from the mask lightness (dark on light, light on dark), optional custom font color; caret/selection/focus colors follow instead of the brand blue.
+- **Hard-coded color takeover**: elements like the copy hovercard (#2C2C2E) are re-tinted to the theme color.
+- **Organized settings**: collapsible groups (Source / Appearance / UI blur / Show wallpaper / Other).
