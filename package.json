@@ -1,6 +1,6 @@
 {
   "name": "dsh-mpkg-wallpaper",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "DSH Web 壁纸引擎 Wallpaper Engine mpkg 背景插件：浏览器内直接解析 .mpkg（preview.gif 动态背景/内嵌 mp4 视频/多时段切换），整屏统一虚化/对话框/弹层/遮罩独立虚化、镜头缩放平移、时钟、冲突检测。",
   "private": false,
   "type": "module",
@@ -33,10 +33,7 @@
     }
   },
   "peerDependencies": {
-    "react": "^18.2.0",
-    "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
-    "@deepseek-ai/schemastery": "^3.18.1",
-    "@deepseek-ai/cordis": "^4.0.1"
+    "react": "^18.2.0"
   },
   "license": "MIT",
   "keywords": [
